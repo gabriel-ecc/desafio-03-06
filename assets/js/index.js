@@ -23,9 +23,13 @@ const generaListaMoneda = async() =>{
 };
 
 const transformaDinero = async(monto, moneda) => {
-
-
-    return `${monto} ${moneda}`;
+    const datos = await obtenerDatos(urlApi+"/"+moneda);
+    const serie = datos.serie;
+    serie.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    const fechaMaxima = serie[0].fecha;
+    const valorMoneda = serie.filter(valor => valor.fecha == fechaMaxima);
+    const salida = monto / valorMoneda[0].valor;
+    return `${salida} ${moneda}`;
 };
 
 const main = () =>{
