@@ -57,3 +57,8 @@ body{
 .suavizado-borde{
     border-radius: 5px;
 }
+
+.texto-up-center{
+    text-transform: uppercase;
+    text-align: center;
+}
