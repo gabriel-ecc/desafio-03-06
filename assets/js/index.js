@@ -27,8 +27,9 @@ const transformaDinero = async(monto, moneda) => {
     const serie = datos.serie;
     serie.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
     const fechaMaxima = serie[0].fecha;
+    console.log(serie[0].fecha);
     const valorMoneda = serie.filter(valor => valor.fecha == fechaMaxima);
-    const salida = monto / valorMoneda[0].valor;
+    const salida = (monto / valorMoneda[0].valor).toFixed(2);
     return `${salida} ${moneda}`;
 };
 
