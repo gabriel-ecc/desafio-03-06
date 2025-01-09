@@ -91,7 +91,7 @@ main();
 
 btnBuscar.addEventListener("click", async()=>{
     btnBuscar.disabled = true;
-    btnBuscar.innerHTML = '<span class="loader"></span>'; 
+    outputMonto.innerHTML = '<div class="loader"></div>'; 
     try{
         outputMonto.innerHTML = await transformaDinero(inputMonto.value, selectMonedas.value);
         fondoGrafico.classList.remove("no-display");
@@ -99,7 +99,8 @@ btnBuscar.addEventListener("click", async()=>{
         await renderGrafica(selectMonedas.value);
     }catch(error)
     {
-        outputMonto.innerHTML = error.message;
+        areaResultados.style.display = 'flex';
+        outputMonto.innerHTML = error;
     }
     btnBuscar.disabled = false;
     btnBuscar.innerHTML = 'Buscar'; 
