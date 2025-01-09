@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/styles/style.css" />
     <script defer src="./assets/js/index.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Conversor Monedas</title>
 </head>
 <body class="content-flex-column-center">
@@ -17,10 +18,16 @@
             <p>Moneda a convertir:</p>
             <select id="select-monedas" class="suavizado-borde texto-centrado texto-up-center"></select>
             <button class="btn-buscar suavizado-borde" id="btn-buscar">Buscar</button>
-            <p class="text-resultado">Resultado: </p><p class="text-resultado texto-up-center" id="output-monto"></p>
+            <section class="resultados" id="resultados">
+                <p class="text-resultado">Resultado: </p><p class="text-resultado texto-up-center" id="output-monto"></p>
+            </section>
+            
         </div>
     </section>
-    
+    <div class="grafica suavizado-borde no-display" id="fondo-grafico">
+        <canvas id="area-grafico"></canvas>
+    </div>
+        
     
 </body>
 </html>

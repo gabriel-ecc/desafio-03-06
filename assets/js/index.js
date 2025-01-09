@@ -3,6 +3,11 @@ const selectMonedas = document.querySelector("#select-monedas");
 const btnBuscar = document.querySelector("#btn-buscar");
 const outputMonto = document.querySelector("#output-monto");
 const urlApi = "https://mindicador.cl/api";
+let grapharea = document.getElementById("area-grafico");
+const fondoGrafico = document.querySelector("#fondo-grafico");
+const areaResultados = document.querySelector("#resultados");
+let myChart = "";
+let serieMoneda;
 
 const obtenerDatos = async(url) =>{
     const res = await fetch(url);
@@ -22,25 +27,65 @@ const generaListaMoneda = async() =>{
     }
 };
 
-const transformaDinero = async(monto, moneda) => {
+const retornaSerieMoneda = async(moneda) =>{
     const datos = await obtenerDatos(urlApi+"/"+moneda);
-    const serie = datos.serie;
-    serie.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-    const fechaMaxima = serie[0].fecha;
-    console.log(serie[0].fecha);
-    const valorMoneda = serie.filter(valor => valor.fecha == fechaMaxima);
+    return datos.serie;
+};
+
+const transformaDinero = async(monto, moneda) => {
+    serieMoneda = await retornaSerieMoneda(moneda);
+    serieMoneda.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    const fechaMaxima = serieMoneda[0].fecha;
+    const valorMoneda = serieMoneda.filter(valor => valor.fecha == fechaMaxima);
     const salida = (monto / valorMoneda[0].valor).toFixed(2);
     return `${salida} ${moneda}`;
 };
 
 const main = () =>{
-    
     generaListaMoneda();
-
 };
+
+ const renderGrafica = async(moneda) => {
+    
+    const data = await getAndCreateDataToChart(moneda);
+    const config = {
+    type: "line",
+    data
+    };
+    if(myChart){
+        myChart.destroy();
+    }
+    myChart = new Chart(grapharea, config); 
+}
+
+
+async function getAndCreateDataToChart(moneda) {
+    serieMoneda = serieMoneda.slice(-10);
+    serieMoneda.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const labels = serieMoneda.map((serie) => {
+        const fecha = new Date(serie.fecha);
+        return fecha.toLocaleDateString('es-CL', { year: 'numeric', month: '2-digit', day: '2-digit' }); 
+    });
+    const data = serieMoneda.map((serie) => {
+    const valor = serie.valor;
+        return Number(valor);
+    });
+    const datasets = [
+    {
+    label: moneda,
+    borderColor: "#7AB2D3",
+    data
+    }
+    ];
+    return { labels, datasets };
+};
+    
 
 main();
 
 btnBuscar.addEventListener("click", async()=>{
     outputMonto.innerHTML = await transformaDinero(inputMonto.value, selectMonedas.value);
+    fondoGrafico.classList.remove("no-display");
+    areaResultados.style.display = 'flex';
+    await renderGrafica(selectMonedas.value);
 });
