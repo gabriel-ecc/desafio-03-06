@@ -10,9 +10,14 @@ let myChart = "";
 let serieMoneda;
 
 const obtenerDatos = async(url) =>{
-    const res = await fetch(url);
-    const data = await res.json();
-    return data;
+    try{
+        const res = await fetch(url);
+        const data = await res.json();
+        return data;
+    }catch(e){
+        alert(e.message);
+    }
+    
 };
 
 const generaListaMoneda = async() =>{
