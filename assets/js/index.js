@@ -70,8 +70,8 @@ const main = () =>{
 
 
 async function getAndCreateDataToChart(moneda) {
-    serieMoneda = serieMoneda.slice(-10);
     serieMoneda.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    serieMoneda = serieMoneda.slice(-10);
     const labels = serieMoneda.map((serie) => {
         const fecha = new Date(serie.fecha);
         return fecha.toLocaleDateString('es-CL', { year: 'numeric', month: '2-digit', day: '2-digit' }); 
