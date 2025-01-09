@@ -38,6 +38,10 @@ body{
     padding: 1rem;
 }
 
+.main{
+    gap: 1rem;
+}
+
 .card{
     background-color: var(--color1);
     height: 300px;

@@ -38,7 +38,12 @@ const transformaDinero = async(monto, moneda) => {
     const fechaMaxima = serieMoneda[0].fecha;
     const valorMoneda = serieMoneda.filter(valor => valor.fecha == fechaMaxima);
     const salida = (monto / valorMoneda[0].valor).toFixed(2);
-    return `${salida} ${moneda}`;
+    if(moneda === "imacec" | moneda === "tpm" | moneda === "tasa_desempleo" | moneda === "ipc"){
+        return `${moneda}`;
+    }else{
+        return `${salida} ${moneda}`;
+    }
+    
 };
 
 const main = () =>{
@@ -46,7 +51,6 @@ const main = () =>{
 };
 
  const renderGrafica = async(moneda) => {
-    
     const data = await getAndCreateDataToChart(moneda);
     const config = {
     type: "line",
@@ -72,9 +76,11 @@ async function getAndCreateDataToChart(moneda) {
     });
     const datasets = [
     {
-    label: moneda,
+    label: moneda.toUpperCase(),
     borderColor: "#7AB2D3",
-    data
+    data,
+    pointRadius: 10,
+    fill: false
     }
     ];
     return { labels, datasets };
@@ -84,8 +90,17 @@ async function getAndCreateDataToChart(moneda) {
 main();
 
 btnBuscar.addEventListener("click", async()=>{
-    outputMonto.innerHTML = await transformaDinero(inputMonto.value, selectMonedas.value);
-    fondoGrafico.classList.remove("no-display");
-    areaResultados.style.display = 'flex';
-    await renderGrafica(selectMonedas.value);
+    btnBuscar.disabled = true;
+    btnBuscar.innerHTML = '<span class="loader"></span>'; 
+    try{
+        outputMonto.innerHTML = await transformaDinero(inputMonto.value, selectMonedas.value);
+        fondoGrafico.classList.remove("no-display");
+        areaResultados.style.display = 'flex';
+        await renderGrafica(selectMonedas.value);
+    }catch(error)
+    {
+        outputMonto.innerHTML = error.message;
+    }
+    btnBuscar.disabled = false;
+    btnBuscar.innerHTML = 'Buscar'; 
 });
