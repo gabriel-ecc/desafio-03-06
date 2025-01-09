@@ -15,7 +15,8 @@ const obtenerDatos = async(url) =>{
         const data = await res.json();
         return data;
     }catch(e){
-        alert(e.message);
+        areaResultados.style.display = 'flex';
+        outputMonto.innerHTML = e.message;
     }
     
 };
